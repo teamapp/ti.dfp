@@ -78,12 +78,22 @@ public class View extends TiUIView {
                     map.put("height", new Integer(adView.getHeight()));
                     
 				    Log.d (TAG, "[ti.dfp] onAdLoaded() " + adView.getWidth() + ", " + adView.getHeight());
-				    proxy.fireEvent("ad_received", new KrollDict(map));
+					
+				    // Avoid crash as reported in Google Play's dashboard.
+				    // Also, looking at https://github.com/appcelerator/titanium_mobile/blob/master/android/titanium/src/java/org/appcelerator/titanium/view/TiUIView.java
+				    // it seems a null check is necessary when using proxy in a listener
+				    // likely because it gets nulled when the view is destroyed. See TiUIView.release()
+				    if (proxy != null) {
+					    proxy.fireEvent("ad_received", new KrollDict(map));
+				    }
 			    }
 			
 			    public void onAdFailedToLoad(int errorCode) {
 				    Log.d (TAG, "[ti.dfp] onAdFailedToLoad(): " + errorCode);
-				    proxy.fireEvent("ad_not_received", new KrollDict());
+				    
+				    if (proxy != null) {
+					    proxy.fireEvent("ad_not_received", new KrollDict());
+				    }
 			    }
 
 			    public void onAdOpened () {
