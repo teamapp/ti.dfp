@@ -27,6 +27,8 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
+import java.util.Date;
+
 @Kroll.module(name="Dfp", id="ti.dfp")
 public class DfpModule extends KrollModule
 {
@@ -46,6 +48,8 @@ public class DfpModule extends KrollModule
 	public static String ADUNIT_ID;
 
     public static Location LOCATION = null;
+    public static Integer GENDER = null;
+    public static Date BIRTHDAY = null;
 
     public static Bundle CUSTOM_TARGETING = null;
 

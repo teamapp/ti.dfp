@@ -18,6 +18,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.ads.mediation.admob.AdMobExtras;
+import java.util.Calendar;
 
 public class View extends TiUIView {
 	private static final String TAG = "ti.dfp.View";
@@ -136,7 +137,18 @@ public class View extends TiUIView {
 
                 if (DfpModule.LOCATION != null)
                 {
+                    Log.i (TAG, "[ti.dfp] Setting location: " + DfpModule.LOCATION);
                     adRequestBuilder.setLocation (DfpModule.LOCATION);
+                }
+                
+                if (DfpModule.GENDER != null) {
+                    Log.i (TAG, "[ti.dfp] Setting gender: " + DfpModule.GENDER);
+                    adRequestBuilder.setGender(DfpModule.GENDER);
+                }
+
+                if (DfpModule.BIRTHDAY != null) {
+                    Log.i (TAG, "[ti.dfp] Setting birthday: " + DfpModule.BIRTHDAY);
+                    adRequestBuilder.setBirthday(DfpModule.BIRTHDAY);
                 }
 
 				Log.d (TAG, "[ti.dfp] requestAd ()");
@@ -223,6 +235,26 @@ public class View extends TiUIView {
 					DfpModule.LOCATION = l;
 				}
  			}
+
+            if (d.containsKey("gender")) {
+                String g = d.getString("gender");
+                if ("male".equals(g)) {
+                    DfpModule.GENDER = PublisherAdRequest.GENDER_MALE;
+                }
+                else if ("female".equals(g)) {
+                    DfpModule.GENDER = PublisherAdRequest.GENDER_FEMALE;
+                }
+                else {
+                    DfpModule.GENDER = PublisherAdRequest.GENDER_UNKNOWN;
+                }
+            }
+
+            if (d.containsKey("birthTimestamp")) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis((long) d.getDouble("birthTimestamp").doubleValue());
+                DfpModule.BIRTHDAY = cal.getTime();
+            }
+
 			if (d.containsKey(DfpModule.PROPERTY_COLOR_BG)) {
 				Log.d (TAG, "[ti.dfp] has PROPERTY_COLOR_BG: " + d.getString(DfpModule.PROPERTY_COLOR_BG));
 				prop_color_bg = convertColorProp(d.getString(DfpModule.PROPERTY_COLOR_BG));
